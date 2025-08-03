@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Extension Icons</title>
+</head>
+<body>
+    <canvas id="canvas" width="128" height="128"></canvas>
+    <script>
+        // Create a simple download icon
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function createIcon(size) {
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background circle
+            ctx.fillStyle = '#1d9bf0';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Download arrow
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size/16;
+            
+            // Arrow shaft
+            const centerX = size/2;
+            const centerY = size/2;
+            const arrowSize = size/3;
+            
+            ctx.fillRect(centerX - size/16, centerY - arrowSize/2, size/8, arrowSize);
+            
+            // Arrow head
+            ctx.beginPath();
+            ctx.moveTo(centerX - arrowSize/3, centerY + arrowSize/4);
+            ctx.lineTo(centerX, centerY + arrowSize/2);
+            ctx.lineTo(centerX + arrowSize/3, centerY + arrowSize/4);
+            ctx.closePath();
+            ctx.fill();
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        // Create different sizes
+        const sizes = [16, 32, 48, 128];
+        sizes.forEach(size => {
+            const dataUrl = createIcon(size);
+            const link = document.createElement('a');
+            link.download = `icon${size}.png`;
+            link.href = dataUrl;
+            link.click();
+        });
+    </script>
+</body>
+</html>

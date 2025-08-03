@@ -1,0 +1,201 @@
+/* X Media Downloader - Optimized Styles */
+
+/* Download Button Base Styles */
+.x-download-btn {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(4px) !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: auto !important;
+}
+
+/* Button Hover Effects */
+.x-download-btn:hover {
+  background: rgba(29, 155, 240, 0.95) !important;
+  transform: scale(1.15) !important;
+  box-shadow: 0 4px 16px rgba(29, 155, 240, 0.4) !important;
+}
+
+.x-download-btn:active {
+  transform: scale(1.05) !important;
+  transition: transform 0.1s !important;
+}
+
+/* Show/Hide Animation */
+.x-download-btn.show,
+.x-media-container:hover .x-download-btn {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Media Container Identification */
+.x-media-container {
+  position: relative !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .x-download-btn {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+    top: 6px !important;
+    right: 6px !important;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .x-download-btn {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* Notification Styles */
+.x-download-notification {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  padding: 14px 20px !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  z-index: 99999 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  animation: slideInFromRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  max-width: 320px !important;
+  word-wrap: break-word !important;
+  pointer-events: none !important;
+}
+
+/* Notification Types */
+.x-download-notification.success {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border-left: 4px solid #34d399 !important;
+}
+
+.x-download-notification.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border-left: 4px solid #f87171 !important;
+}
+
+.x-download-notification.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  border-left: 4px solid #60a5fa !important;
+}
+
+/* Notification Animation */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%) translateY(-20px) !important;
+    opacity: 0 !important;
+  }
+  50% {
+    transform: translateX(-5%) translateY(-10px) !important;
+    opacity: 0.8 !important;
+  }
+  100% {
+    transform: translateX(0) translateY(0) !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Button positioning for specific X.com elements */
+[data-testid="videoPlayer"] .x-download-btn {
+  top: 12px !important;
+  right: 12px !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+[data-testid="tweetPhoto"] .x-download-btn {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Ensure buttons don't interfere with existing UI */
+.x-download-btn {
+  pointer-events: auto !important;
+}
+
+.x-download-btn * {
+  pointer-events: none !important;
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  .x-download-btn {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+  
+  .x-download-btn:hover {
+    background: rgba(29, 155, 240, 0.9) !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.x-download-btn:focus {
+  outline: 2px solid #1d9bf0 !important;
+  outline-offset: 2px !important;
+}
+
+/* Prevent selection of button text */
+.x-download-btn {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Loading state */
+.x-download-btn.loading {
+  animation: pulse 1.5s infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Custom scrollbar for notifications (if needed) */
+.x-download-notification::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .x-download-btn {
+    background: black !important;
+    border: 2px solid white !important;
+  }
+  
+  .x-download-btn:hover {
+    background: #1d9bf0 !important;
+    border-color: white !important;
+  }
+}
