@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X Media Downloader</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      min-height: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .container {
+      padding: 0;
+      height: 100%;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1d9bf0;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #666;
+      font-weight: 400;
+    }
+
+    .content {
+      padding: 20px;
+      background: white;
+    }
+
+    .status-card {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.active {
+      background: #10b981;
+    }
+
+    .status-indicator.inactive {
+      background: #ef4444;
+      animation: none;
+    }
+
+    .status-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1d9bf0;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .settings-section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title::before {
+      content: "⚙️";
+      margin-right: 6px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 14px;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.3s;
+      border-radius: 26px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #1d9bf0;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .custom-select {
+      appearance: none;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 8px 32px 8px 12px;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+      min-width: 100px;
+    }
+
+    .custom-select:focus {
+      outline: none;
+      border-color: #1d9bf0;
+      box-shadow: 0 0 0 3px rgba(29, 155, 240, 0.1);
+    }
+
+    .select-wrapper::after {
+      content: "▼";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #6b7280;
+      font-size: 10px;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #1d9bf0, #1570ef);
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(135deg, #1570ef, #1d4ed8);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(29, 155, 240, 0.3);
+    }
+
+    .btn.secondary {
+      background: #f8fafc;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn.secondary:hover {
+      background: #f1f5f9;
+      border-color: #d1d5db;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .footer {
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .version {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>X Media Downloader</h1>
+      <p>Download videos, images & GIFs from X.com</p>
+    </div>
+
+    <div class="content">
+      <div class="status-card">
+        <span class="status-indicator" id="statusIndicator"></span>
+        <span class="status-text" id="statusText">Checking status...</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-value" id="todayCount">0</span>
+          <div class="stat-label">Today</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="totalCount">0</span>
+          <div class="stat-label">Total</div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="section-title">Settings</div>
+        
+        <div class="setting-item">
+          <span class="setting-label">Show notifications</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="notifications">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <span class="setting-label">Auto-increment filenames</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoIncrement">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <span class="setting-label">Download quality</span>
+          <div class="select-wrapper">
+            <select class="custom-select" id="quality">
+              <option value="highest">Highest</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="openFolder">
+          📁 Open Downloads Folder
+        </button>
+        <button class="btn secondary" id="clearStats">
+          🗑️ Clear Statistics
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="version">Version 2.0 - Made with ❤️</div>
+    </div>
+  </div>
+
+  <script src="popup_script.js"></script>
+</body>
+</html>
